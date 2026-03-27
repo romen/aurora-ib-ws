@@ -175,6 +175,8 @@
                 python3Packages.nodeenv
                 lazygit
                 git-cliff
+
+                unstable-pkgs.libclang
               ]
               ++ (
                 if pkgs.stdenv.isLinux
