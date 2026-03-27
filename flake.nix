@@ -1,6 +1,6 @@
 {
   inputs = {
-    #nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     #nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     #nixpkgs.follows = "nixpkgs-stable";
     nixpkgs.follows = "romen/nixpkgs";
@@ -17,6 +17,7 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-unstable,
     utils,
     naersk,
     romen,
@@ -27,6 +28,7 @@
     utils.lib.eachDefaultSystem (system: let
       #pkgs = import nixpkgs {inherit system;};
       pkgs = inputs.romen.legacyPackages.${system};
+      unstable-pkgs = import nixpkgs-unstable {inherit system;};
       naersk-lib = pkgs.callPackage naersk {
         rustc = pkgs.rust-bin.stable.${rust-version}.default;
         cargo = pkgs.rust-bin.stable.${rust-version}.default;
@@ -154,6 +156,7 @@
                 romen.openssl_3_2_with_oqs-provider
                 pkg-config
                 rust-bin.stable.${rust-version}.default
+                rust-bin.stable.${rust-version}.rust-analyzer
                 #cargo
                 #rustc
                 #rustfmt
@@ -165,8 +168,9 @@
                 just
                 nixpkgs-fmt
                 alejandra
+                cargo-nextest
+                cargo-edit
 
-                neovim
                 ruby
                 python3Packages.nodeenv
                 lazygit
@@ -177,7 +181,10 @@
                 then [
                   gdb
                   valgrind
-                  dive
+                  #dive
+
+                  unstable-pkgs.autoconf
+                  unstable-pkgs.automake
                 ]
                 else if pkgs.stdenv.isDarwin
                 then []

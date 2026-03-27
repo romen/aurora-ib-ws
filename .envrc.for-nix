@@ -1,4 +1,6 @@
-use flake .\?submodules=1 --impure
+nix_direnv_manual_reload
+#use flake .\?submodules=1 --impure
+use flake .\?submodules=1
 
 use_nodeenv() {
   nodeenv $PWD/.direnv/nodeenv
